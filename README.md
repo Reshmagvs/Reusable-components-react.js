@@ -4,110 +4,169 @@ Output:
 
 ![Alt Text](https://github.com/Reshmagvs/Reusable-components-react.js/blob/main/reuse_js.png)
 
-1. First, install Vue CLI globally ( write the command in vs code terminal ) :
+1. Setup a React Project in VS Code
+````
+npx create-react-app reusable-components
+cd reusable-components
+code . 
+````
+2. Create the Reusable Component
+```
+mkdir src/components
+touch src/components/Button.js
+```
+3.Then, open src/components/Button.js and paste this:
+```
+import { useState } from "react";
 
-```
-npm install -g @vue/cli
-```
-2. Verify the installation:
+const Button = ({ label, onClick }) => {
+  const [hover, setHover] = useState(false);
 
-```
-vue --version:
-```
-3. Create a New Vue Project
+  return (
+    <button
+      style={hover ? { ...styles.button, ...styles.hover } : styles.button}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+};
 
-```
-vue create task-list-app
-cd task-list-app
-```
-4. Start the Vue development server:
-   
-```
-npm run serve
-```
-5. Create a New Vue Component (TaskList.vue)
-Inside the src/components/ folder, create a file named TaskList.vue and add the following code :
-
-```
-<template>
-  <div>
-    <h2>Task List</h2>
-    <input v-model="newTask" placeholder="Enter a task" />
-    <button @click="addTask">Add Task</button>
-
-    <ul>
-      <li v-for="(task, index) in tasks" :key="index">
-        {{ task }}
-        <button @click="removeTask(index)">Remove</button>
-      </li>
-    </ul>
-  </div>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      newTask: "",
-      tasks: [],
-    };
+const styles = {
+  button: {
+    background: "linear-gradient(90deg, #007BFF, #00C9FF)",
+    color: "white",
+    padding: "14px 24px",
+    fontSize: "18px",
+    fontWeight: "bold",
+    borderRadius: "12px",
+    border: "none",
+    cursor: "pointer",
+    transition: "0.4s ease-in-out",
+    boxShadow: "4px 4px 15px rgba(0, 0, 0, 0.2)",
   },
-  methods: {
-    addTask() {
-      if (this.newTask.trim()) {
-        this.tasks.push(this.newTask);
-        this.newTask = "";
-      }
-    },
-    removeTask(index) {
-      this.tasks.splice(index, 1);
-    },
+  hover: {
+    background: "linear-gradient(90deg, #0056b3, #0093E9)",
+    transform: "scale(1.08)",
+    boxShadow: "6px 6px 20px rgba(0, 0, 0, 0.3)",
   },
 };
-</script>
 
-<style scoped>
-button {
-  margin-left: 10px;
-  cursor: pointer;
+export default Button;
+```
+4. Use the Component in App.js
+```
+code src/App.js
+```
+5. Replace the contents with:
+```
+import React, { useState } from "react";
+import Button from "./components/Button";
+
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleTheme = () => setDarkMode(!darkMode);
+
+  return (
+    <div style={darkMode ? styles.darkContainer : styles.lightContainer}>
+      <h1 style={styles.heading}>🚀 Reusable Component in React</h1>
+      <Button label="Click Me" onClick={() => alert("Clicked!")} />
+      <br />
+      <button style={styles.themeButton} onClick={toggleTheme}>
+        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
+    </div>
+  );
 }
-</style>
-```
-6. Use TaskList Component in App.vue
-Open src/App.vue and replace everything with:
-```
-<template>
-  <div>
-    <h1>Vue Task List App</h1>
-    <TaskList />
-  </div>
-</template>
 
-<script>
-import TaskList from "./components/TaskList.vue";
-
-export default {
-  components: {
-    TaskList,
+const styles = {
+  lightContainer: {
+    textAlign: "center",
+    marginTop: "50px",
+    padding: "50px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    transition: "all 0.5s ease-in-out",
+    background: "linear-gradient(135deg, #f8f9fa, #d6e4f0)",
+  },
+  darkContainer: {
+    textAlign: "center",
+    marginTop: "50px",
+    padding: "50px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 10px rgba(255, 255, 255, 0.1)",
+    color: "white",
+    transition: "all 0.5s ease-in-out",
+    background: "linear-gradient(135deg, #1e1e1e, #333)",
+  },
+  heading: {
+    fontSize: "2.5rem",
+    fontWeight: "bold",
+    marginBottom: "20px",
+    textShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
+  },
+  themeButton: {
+    marginTop: "20px",
+    background: "linear-gradient(90deg, #ffcc00, #ff8800)",
+    color: "#333",
+    padding: "12px 18px",
+    fontSize: "18px",
+    borderRadius: "10px",
+    border: "none",
+    cursor: "pointer",
+    transition: "0.3s ease-in-out",
+    fontWeight: "bold",
+    boxShadow: "3px 3px 10px rgba(0, 0, 0, 0.2)",
   },
 };
-</script>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
+export default App;
+```
+5. Styling : app.css
+```
+.App {
   text-align: center;
 }
-</style>
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 ```
-7. Run the Vue App
-Go back to the terminal and restart the server:
-
+6. Run the React App
 ```
-npm run serve
+npm start
 ```
-
-
-
-
-
